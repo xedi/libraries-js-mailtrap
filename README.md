@@ -1,0 +1,1 @@
+# Mailtrap API Wrapper
