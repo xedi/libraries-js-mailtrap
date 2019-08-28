@@ -1,0 +1,28 @@
+{
+  "name": "@xedi/mailtrap",
+  "version": "1.0.0",
+  "description": "API Wrapper for Mailtrap.io",
+  "main": "dist/Mailtrap.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xedi/libraries-js-mailtrap.git"
+  },
+  "keywords": [
+    "api",
+    "api-wrapper",
+    "mailtrap"
+  ],
+  "author": "Chris Smith <chris@xedi.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xedi/libraries-js-mailtrap/issues"
+  },
+  "homepage": "https://github.com/xedi/libraries-js-mailtrap#readme",
+  "devDependencies": {
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15"
+  }
+}
