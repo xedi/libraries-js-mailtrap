@@ -1,6 +1,14 @@
+import expect from 'must';
+import Collection from '../lib/Collection';
+
 describe('Collection', () => {
     describe('count', () => {
-        it('Should return the number of items present in a Collection');
+        it('Should return the number of items present in a Collection', (done) => {
+            let collection = new Collection([ "foo", "bar" ]);
+
+            expect(collection.count()).to.be.equal(2);
+            done();
+        });
     });
 
     describe('isEmpty', () => {
