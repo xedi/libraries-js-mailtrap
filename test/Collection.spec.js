@@ -12,8 +12,19 @@ describe('Collection', () => {
     });
 
     describe('isEmpty', () => {
-        it('Should return true if there are no items in the Collection');
-        it('Should return false if there are items in the Collection');
+        it('Should return true if there are no items in the Collection', (done) => {
+            let collection = new Collection();
+
+            expect(collection.isEmpty()).to.be.true();
+            done();
+        });
+
+        it('Should return false if there are items in the Collection', (done) => {
+            let collection = new Collection([ "foo", "bar" ]);
+
+            expect(collection.isEmpty()).to.be.false();
+            done();
+        });
     });
 
     describe('eachPromise', () => {
