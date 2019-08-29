@@ -6,6 +6,7 @@ import Collection from '../lib/Collection';
 import list_fixture from './Fixtures/inboxes/list';
 import find_fixture from './Fixtures/inboxes/find';
 import clean_fixture from './Fixtures/inboxes/clean';
+import all_read_fixture from './Fixtures/inboxes/all_read';
 
 describe('Inbox', () => {
     before(() => {
@@ -102,7 +103,23 @@ describe('Inbox', () => {
     });
 
     describe('markAllRead', () => {
-        it('Should mark all messages as read');
+        it('Should mark all messages as read', (done) => {
+            let inbox = new Inbox(JSON.parse(find_fixture));
+
+            nock('http://test.test')
+                .patch('/api/v1/inboxes/abc/all_read')
+                .reply(
+                    200,
+                    all_read_fixture
+                );
+
+            inbox.markAllRead()
+                .then(() => {
+                    expect(inbox.attr('emails_unread_count')).to.be.equal(0);
+
+                    done();
+                });
+        });
     });
 
     describe('messages', () => {
