@@ -5,6 +5,7 @@ import Collection from '../lib/Collection';
 import Mailtrap from '../lib/Mailtrap';
 import list_fixture from './Fixtures/Message/list';
 import find_fixture from './Fixtures/Message/find';
+import read_fixture from './Fixtures/Message/read';
 
 describe('Message', () => {
     before(() => {
@@ -80,7 +81,26 @@ describe('Message', () => {
     });
 
     describe('markRead', () => {
-        it('Should mark a Message instance as read');
+        it('Should mark a Message instance as read', (done) => {
+            nock('http://test.test')
+                .patch('/api/v1/inboxes/abc/messages/123')
+                .reply(
+                    200,
+                    read_fixture
+                );
+
+            let message = new Message(JSON.parse(find_fixture));
+
+            message.markRead()
+                .then(() => {
+                    try {
+                        expect(message.attr('is_read')).to.be.true();
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                });
+        });
     });
 
     describe('delete', () => {
