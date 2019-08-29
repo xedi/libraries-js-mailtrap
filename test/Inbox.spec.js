@@ -4,11 +4,11 @@ import Mailtrap from '../lib/Mailtrap';
 import Message from '../lib/Message';
 import Inbox from '../lib/Inbox';
 import Collection from '../lib/Collection';
-import list_fixture from './Fixtures/inboxes/list';
-import find_fixture from './Fixtures/inboxes/find';
-import clean_fixture from './Fixtures/inboxes/clean';
-import all_read_fixture from './Fixtures/inboxes/all_read';
-import messages_fixture from './Fixtures/inboxes/messages';
+import list_fixture from './Fixtures/Inbox/list';
+import find_fixture from './Fixtures/Inbox/find';
+import clean_fixture from './Fixtures/Inbox/clean';
+import all_read_fixture from './Fixtures/Inbox/all_read';
+import messages_fixture from './Fixtures/Inbox/messages';
 
 describe('Inbox', () => {
     before(() => {
