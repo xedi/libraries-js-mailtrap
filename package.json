@@ -7,7 +7,9 @@
     "test": "mocha --opts ./mocha.opts test/*.spec.js",
     "build": "gulp build",
     "clean": "gulp clean",
-    "lint": "gulp lint"
+    "lint": "gulp lint",
+    "prepublishOnly": "scripts/prepublish.sh",
+    "postpublish": "scripts/postpublish.sh"
   },
   "repository": {
     "type": "git",
