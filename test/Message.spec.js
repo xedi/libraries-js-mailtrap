@@ -129,7 +129,7 @@ describe('Message', () => {
         });
     });
 
-    describe('getHTMLBody', () => {
+    describe('getHtmlBody', () => {
         it('Should return the HTML content of the message body', (done) => {
             nock('http://test.test')
                 .get('/api/v1/inboxes/abc/messages/123/body.html')
