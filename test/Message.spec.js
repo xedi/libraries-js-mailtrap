@@ -8,6 +8,8 @@ import find_fixture from './Fixtures/Message/find';
 import read_fixture from './Fixtures/Message/read';
 import delete_fixture from './Fixtures/Message/delete';
 
+const fake_message = JSON.parse(find_fixture);
+
 describe('Message', () => {
     before(() => {
         Mailtrap
@@ -90,7 +92,7 @@ describe('Message', () => {
                     read_fixture
                 );
 
-            let message = new Message(JSON.parse(find_fixture));
+            let message = new Message(fake_message);
 
             message.markRead()
                 .then(() => {
@@ -113,7 +115,7 @@ describe('Message', () => {
                     delete_fixture
                 );
 
-            let message = new Message(JSON.parse(find_fixture));
+            let message = new Message(fake_message);
 
             message.delete()
                 .then(() => {
@@ -128,6 +130,25 @@ describe('Message', () => {
     });
 
     describe('getHTMLBody', () => {
-        it('Should return the HTML content of the message body');
+        it('Should return the HTML content of the message body', (done) => {
+            nock('http://test.test')
+                .get('/api/v1/inboxes/abc/messages/123/body.html')
+                .reply(
+                    200,
+                    "<html><body><h1>Test</h1></body></html>"
+                );
+
+            let message = new Message(fake_message);
+
+            message.getHTMLBody()
+                .then((response) => {
+                    try {
+                        expect(response.data).to.be.equal("<html><body><h1>Test</h1></body></html>");
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                });
+        });
     });
 });
