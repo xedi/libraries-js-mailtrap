@@ -80,30 +80,23 @@ describe('Inbox', () => {
 
     describe('clean', () => {
         it('Should call the clean endpoint', (done) => {
+            let inbox = new Inbox(JSON.parse(find_fixture));
+
             nock('http://test.test')
-                .get('/api/v1/inboxes/abc')
+                .patch('/api/v1/inboxes/abc/clean')
                 .reply(
                     200,
-                    find_fixture
+                    clean_fixture
                 );
 
-            Inbox.find("abc").then((inbox) => {
-                nock('http://test.test')
-                    .patch('/api/v1/inboxes/abc/clean')
-                    .reply(
-                        200,
-                        clean_fixture
-                    );
+            inbox.clean().then(() => {
+                try {
+                    expect(inbox.attr('emails_count')).to.be.equal(0);
 
-                inbox.clean().then(() => {
-                    try {
-                        expect(inbox.attr('emails_count')).to.be.equal(0);
-
-                        done();
-                    } catch (error) {
-                        done(error);
-                    }
-                });
+                    done();
+                } catch (error) {
+                    done(error);
+                }
             });
         });
     });
