@@ -140,7 +140,7 @@ describe('Message', () => {
 
             let message = new Message(fake_message);
 
-            message.getHTMLBody()
+            message.getHtmlBody()
                 .then((response) => {
                     try {
                         expect(response.data).to.be.equal("<html><body><h1>Test</h1></body></html>");
