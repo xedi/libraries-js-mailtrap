@@ -4,6 +4,7 @@ import Message from '../lib/Message';
 import Collection from '../lib/Collection';
 import Mailtrap from '../lib/Mailtrap';
 import list_fixture from './Fixtures/Message/list';
+import find_fixture from './Fixtures/Message/find';
 
 describe('Message', () => {
     before(() => {
@@ -57,7 +58,25 @@ describe('Message', () => {
     });
 
     describe('find', () => {
-        it('Should return a single Message instance');
+        it('Should return a single Message instance', (done) => {
+            nock('http://test.test')
+                .get('/api/v1/inboxes/abc/messages/123')
+                .reply(
+                    200,
+                    find_fixture
+                );
+
+            Message.find(123, { inbox_id: "abc" })
+                .then((message) => {
+                    try {
+                        expect(message).to.be.instanceof(Message);
+
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                });
+        });
     });
 
     describe('markRead', () => {
