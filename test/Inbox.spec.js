@@ -1,12 +1,14 @@
 import expect from 'must';
 import nock from 'nock';
 import Mailtrap from '../lib/Mailtrap';
+import Message from '../lib/Message';
 import Inbox from '../lib/Inbox';
 import Collection from '../lib/Collection';
 import list_fixture from './Fixtures/inboxes/list';
 import find_fixture from './Fixtures/inboxes/find';
 import clean_fixture from './Fixtures/inboxes/clean';
 import all_read_fixture from './Fixtures/inboxes/all_read';
+import messages_fixture from './Fixtures/inboxes/messages';
 
 describe('Inbox', () => {
     before(() => {
@@ -123,6 +125,28 @@ describe('Inbox', () => {
     });
 
     describe('messages', () => {
-        it('Should return all messages in the inbox');
+        it('Should return all messages in the inbox', (done) => {
+            let inbox = new Inbox(JSON.parse(find_fixture));
+
+            nock('http://test.test')
+                .get('/api/v1/inboxes/abc/messages')
+                .reply(
+                    200,
+                    messages_fixture
+                );
+
+            inbox.messages()
+                .then((messages) => {
+                    try {
+                        expect(messages).to.be.instanceof(Collection);
+                        expect(messages.count()).to.be.equal(2);
+                        expect(messages.every(message => message instanceof Message)).to.be.true();
+
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                });
+        });
     });
 });
