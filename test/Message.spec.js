@@ -6,6 +6,7 @@ import Mailtrap from '../lib/Mailtrap';
 import list_fixture from './Fixtures/Message/list';
 import find_fixture from './Fixtures/Message/find';
 import read_fixture from './Fixtures/Message/read';
+import delete_fixture from './Fixtures/Message/delete';
 
 describe('Message', () => {
     before(() => {
@@ -104,7 +105,26 @@ describe('Message', () => {
     });
 
     describe('delete', () => {
-        it('Should delete a Message instance');
+        it('Should delete a Message instance', (done) => {
+            nock('http://test.test')
+                .delete('/api/v1/inboxes/abc/messages/123')
+                .reply(
+                    200,
+                    delete_fixture
+                );
+
+            let message = new Message(JSON.parse(find_fixture));
+
+            message.delete()
+                .then(() => {
+                    try {
+                        expect(message.attr('is_deleted')).to.be.true();
+                        done();
+                    } catch (error) {
+                        done(error);
+                    }
+                });
+        });
     });
 
     describe('getHTMLBody', () => {
