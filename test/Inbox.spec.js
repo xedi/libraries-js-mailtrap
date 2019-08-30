@@ -9,6 +9,10 @@ import find_fixture from './Fixtures/Inbox/find';
 import clean_fixture from './Fixtures/Inbox/clean';
 import all_read_fixture from './Fixtures/Inbox/all_read';
 import messages_fixture from './Fixtures/Inbox/messages';
+import wait_for_messages_fixture from './Fixtures/Inbox/wait_for_messages';
+import wait_for_messages_2_fixture from './Fixtures/Inbox/wait_for_messages_2';
+
+const fake_inbox = JSON.parse(find_fixture);
 
 describe('Inbox', () => {
     before(() => {
@@ -83,7 +87,7 @@ describe('Inbox', () => {
 
     describe('clean', () => {
         it('Should call the clean endpoint', (done) => {
-            let inbox = new Inbox(JSON.parse(find_fixture));
+            let inbox = new Inbox(fake_inbox);
 
             nock('http://test.test')
                 .patch('/api/v1/inboxes/abc/clean')
@@ -106,7 +110,7 @@ describe('Inbox', () => {
 
     describe('markAllRead', () => {
         it('Should mark all messages as read', (done) => {
-            let inbox = new Inbox(JSON.parse(find_fixture));
+            let inbox = new Inbox(fake_inbox);
 
             nock('http://test.test')
                 .patch('/api/v1/inboxes/abc/all_read')
@@ -126,7 +130,7 @@ describe('Inbox', () => {
 
     describe('messages', () => {
         it('Should return all messages in the inbox', (done) => {
-            let inbox = new Inbox(JSON.parse(find_fixture));
+            let inbox = new Inbox(fake_inbox);
 
             nock('http://test.test')
                 .get('/api/v1/inboxes/abc/messages')
@@ -148,5 +152,85 @@ describe('Inbox', () => {
                     }
                 });
         });
+    });
+
+    describe('waitForMessages', () => {
+        it('Should return if the message is already received', async () => {
+            let inbox = new Inbox(fake_inbox);
+
+            nock('http://test.test')
+                .get('/api/v1/inboxes/abc/messages')
+                .reply(
+                    200,
+                    wait_for_messages_fixture
+                );
+
+            let messages = await inbox.waitForMessages({
+                to_email: '123@test.com'
+            });
+
+            expect(messages).to.be.instanceof(Collection);
+            expect(messages.items).to.have.length(1);
+            expect(messages.items[0].attr('to_email')).to.be.equal('123@test.com');
+        });
+
+        it('Should iterate until a message is received', async () => {
+            let inbox = new Inbox(fake_inbox);
+
+            nock('http://test.test')
+                .get('/api/v1/inboxes/abc/messages')
+                .reply(
+                    200,
+                    wait_for_messages_fixture
+                )
+                .get('/api/v1/inboxes/abc/messages')
+                .reply(
+                    200,
+                    wait_for_messages_2_fixture
+                );
+
+            let messages = await inbox.waitForMessages(
+                {
+                    to_email: '789@test.com'
+                },
+                undefined,
+                500
+            );
+
+            expect(messages).to.be.instanceof(Collection);
+            expect(messages.items).to.have.length(1);
+            expect(messages.items[0].attr('to_email')).to.be.equal('789@test.com');
+        });
+
+        it('Should error if the timeout duration is hit', async () => {
+            let inbox = new Inbox(fake_inbox);
+
+            nock('http://test.test')
+                .persist()
+                .get('/api/v1/inboxes/abc/messages')
+                .reply(
+                    200,
+                    '[]'
+                );
+
+            try {
+                await inbox.waitForMessages(
+                    { to_email: 'someone@test.com' },
+                    1000,
+                    500
+                );
+
+                throw new Error('Should have Errored');
+            } catch (error) {
+                expect(error).to.be.instanceof(Error);
+                expect(error.message).to.be.equal(
+                    'Timed out waiting for a message that matches the provided parameters.'
+                );
+            }
+        });
+    });
+
+    afterEach(() => {
+        nock.cleanAll();
     });
 });
