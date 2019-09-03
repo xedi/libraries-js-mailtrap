@@ -74,7 +74,7 @@ gulp.task('build:components', function() {
         .pipe(sourcemaps.init())
         .pipe(babel())
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist/components'));
+        .pipe(gulp.dest('dist'));
 });
 
 function buildBundle(options, extname, minify) {
