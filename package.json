@@ -1,6 +1,6 @@
 {
   "name": "@xedi/mailtrap",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "API Wrapper for Mailtrap.io",
   "main": "dist/Mailtrap.js",
   "scripts": {
