@@ -2,7 +2,7 @@ update_configs:
 - automerged_updates:
   - match: {dependency_type: development, update_type: all}
   - match: {dependency_type: production, update_type: 'semver:patch'}
-  default_reviewers: [Smudge3806, Jonny-webedi]
+  default_reviewers: [Smudge3806, JonathanSwallow]
   directory: ./
   package_manager: javascript
   target_branch: master
