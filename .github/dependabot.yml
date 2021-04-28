@@ -1,0 +1,45 @@
+version: 2
+registries:
+  git-github-com:
+    type: git
+    url: https://github.com
+    username: x-access-token
+    password: "${{secrets.GIT_GITHUB_COM_PASSWORD}}"
+  git-http-basic-nova-laravel-com:
+    type: git
+    url: https://http-basic.nova.laravel.com
+    username: ryan@xedi.com
+    password: "${{secrets.GIT_HTTP_BASIC_NOVA_LARAVEL_COM_PASSWORD}}"
+  npm-registry-npm-fontawesome-com:
+    type: npm-registry
+    url: https://npm.fontawesome.com/
+    token: "${{secrets.NPM_REGISTRY_NPM_FONTAWESOME_COM_TOKEN}}"
+  npm-registry-npm-pkg-github-com:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: "${{secrets.NPM_REGISTRY_NPM_PKG_GITHUB_COM_TOKEN}}"
+
+updates:
+- package-ecosystem: npm
+  directory: "/."
+  schedule:
+    interval: daily
+    time: "22:00"
+  open-pull-requests-limit: 10
+  target-branch: master
+  reviewers:
+  - Smudge3806
+  - JonathanSwallow
+  versioning-strategy: lockfile-only
+  ignore:
+  - dependency-name: lodash
+    versions:
+    - 4.17.20
+  - dependency-name: elliptic
+    versions:
+    - 6.5.3
+  registries:
+  - npm-registry-npm-fontawesome-com
+  - npm-registry-npm-pkg-github-com
+  - git-github-com
+  - git-http-basic-nova-laravel-com
